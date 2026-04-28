@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Cloud Code guidance for the `undresser-pyworker/` repository.
+Cloud Code guidance for the `batch-faceswap-tool/pyworker/` repository.
 
 ## Branch
 
