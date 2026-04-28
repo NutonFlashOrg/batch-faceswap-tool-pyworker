@@ -581,25 +581,35 @@ def transform_app_to_vast(payload: dict) -> dict:
             None,
         )
         if ref_video is not None and ref_video.get("key"):
-            out_input["output_s3_key"] = _output_key_for(ref_video["key"])
+            derived = _output_key_for(ref_video["key"])
+            if derived is not None:
+                out_input["output_s3_key"] = derived
         return _merge_passthrough({"input": out_input}, payload)
     finally:
         if scratch_dir is not None:
             _cleanup_worker_s3_scratch(scratch_dir)
 
 
-def _output_key_for(reference_video_input_key: str) -> str:
+def _output_key_for(reference_video_input_key: str) -> str | None:
     """Derive output key from input source-video key.
 
     Contract (Plan 4 Track A1):
         jobs/<job_id>/videos/<video_id>/source.mp4
         → jobs/<job_id>/videos/<video_id>/output.mp4
+
+    Returns None for keys that don't match the contract shape — this is
+    expected for benchmark / calibration runs whose video lives at
+    ``benchmarks/benchmark_video_1s.mp4``. The caller skips the
+    ``output_s3_key`` override in that case and ``comfy_backend.py`` falls
+    through to ``s3.build_key(user_id, generation_id, filename)``.
     """
     if not reference_video_input_key.endswith("/source.mp4"):
-        raise ValueError(
-            f"unexpected input key shape: {reference_video_input_key!r}; "
-            "expected '.../source.mp4'"
+        logger.info(
+            "output_s3_key override skipped: input key %r does not match "
+            "'.../source.mp4' contract shape (likely a benchmark/calibration run)",
+            reference_video_input_key,
         )
+        return None
     return reference_video_input_key.removesuffix("/source.mp4") + "/output.mp4"
 
 
