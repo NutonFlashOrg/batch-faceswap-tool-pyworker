@@ -4,3 +4,6 @@ __pycache__
 bin/
 lib64
 .venv
+.DS_Store
+*.pyc
+.pytest_cache/
