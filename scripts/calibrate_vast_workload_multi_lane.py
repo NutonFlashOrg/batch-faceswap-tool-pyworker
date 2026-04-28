@@ -11,10 +11,10 @@ Vast workload calibration on ONE reference GPU (boot or manual).
 
 **BENCHMARK_GENERATION_LANE → manifest key** (must exist in manifest JSON):
 
-- WAN22_I2V_LONG_5090 → WAN22_I2V_LONG_5090
 - WAN22_IV2V_FACESWAP_5090 → WAN22_IV2V_FACESWAP_5090
-- ZIMAGE_TURBO_I2I_5090 → ZIMAGE_TURBO_I2I_5090
-- FLUX_S2_I2I_5090 → FLUX_S2_I2I_5090
+
+This fork ships a single lane; upstream (improved-undresser) uses this script
+for four lanes — see git history if other lanes are reintroduced.
 
 If ``BENCHMARK_GENERATION_LANE`` is **unset**, runs **all** manifest entries (handy for
 one-off local runs). Vast benchmark templates always set the lane → **one** prod JSON.
@@ -22,8 +22,7 @@ Use ``--all-manifest-lanes`` to time every manifest entry even when the env var 
 
 Manifest example (JSON file):
   {
-    "WAN22_I2V_LONG_5090": "wan22-i2v-long_app.json",
-    "FLUX_S2_I2I_5090": "flux-s2-i2i_app.json"
+    "WAN22_IV2V_FACESWAP_5090": "wan22-iv2v-faceswap_app.json"
   }
 
 Each prod file: {"input": {"workflow": {...}, "user_id", "generation_id", "input_images", ...}}
@@ -165,12 +164,9 @@ def _normalize_lane(s: str) -> str:
     return (s or "").strip().upper().replace(" ", "_")
 
 
-# BENCHMARK_GENERATION_LANE IS the manifest key for undresser — no remapping needed.
+# BENCHMARK_GENERATION_LANE IS the manifest key — no remapping needed. Single-lane fork.
 _BENCH_LANE_TO_PROD_MANIFEST_KEY: dict[str, str] = {
-    "WAN22_I2V_LONG_5090": "WAN22_I2V_LONG_5090",
     "WAN22_IV2V_FACESWAP_5090": "WAN22_IV2V_FACESWAP_5090",
-    "ZIMAGE_TURBO_I2I_5090": "ZIMAGE_TURBO_I2I_5090",
-    "FLUX_S2_I2I_5090": "FLUX_S2_I2I_5090",
 }
 
 

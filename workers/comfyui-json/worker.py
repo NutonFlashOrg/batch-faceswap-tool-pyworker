@@ -4,11 +4,7 @@ Vast PyWorker for ComfyUI with app-format request transform.
 Accepts app format: {workflow, input_images, user_id, generation_id, ...}
 Transforms to Vast format and forwards to API wrapper.
 
-Undresser lanes:
-- WAN22_I2V_LONG_5090  (Blackwell, video I2V)
-- WAN22_IV2V_FACESWAP_5090  (Blackwell, video IV2V)
-- ZIMAGE_TURBO_I2I_5090  (Blackwell, image I2I)
-- FLUX_S2_I2I_5090  (Blackwell, image I2I)
+Single lane: WAN22_IV2V_FACESWAP_5090 (Blackwell, video IV2V face-swap).
 """
 
 import logging
@@ -33,21 +29,16 @@ MODEL_HEALTHCHECK_ENDPOINT = os.getenv("MODEL_HEALTHCHECK_ENDPOINT", "/health")
 BENCHMARK_RUNS = int(os.getenv("BENCHMARK_RUNS", "1"))
 
 # Template / calibration lane (BENCHMARK_GENERATION_LANE on Vast) → default benchmark JSON under misc/.
-# Bot/request workload uses generation_lane keys like WAN22_I2V_LONG_5090 (VAST_WORKLOAD_UNITS_<LANE>).
+# This fork ships only the WAN22_IV2V_FACESWAP_5090 lane; upstream (improved-undresser) carries
+# four lanes here — see git history if other lanes are ever reintroduced.
 _DEFAULT_BENCHMARK_FILES: dict[str, str] = {
-    "WAN22_I2V_LONG_5090": "benchmark_WAN22_I2V_LONG_5090.json",
     "WAN22_IV2V_FACESWAP_5090": "benchmark_WAN22_IV2V_FACESWAP_5090.json",
-    "ZIMAGE_TURBO_I2I_5090": "benchmark_ZIMAGE_TURBO_I2I_5090.json",
-    "FLUX_S2_I2I_5090": "benchmark_FLUX_S2_I2I_5090.json",
 }
 
 # BENCHMARK_GENERATION_LANE (template/calibration) → input.generation_lane for workload_calculator / SDK cost=.
-# In undresser, BENCHMARK_GENERATION_LANE IS the generation_lane — no remapping needed.
+# Identity mapping: BENCHMARK_GENERATION_LANE IS the generation_lane.
 _BENCHMARK_ENV_LANE_TO_REQUEST_GENERATION_LANE: dict[str, str] = {
-    "WAN22_I2V_LONG_5090": "WAN22_I2V_LONG_5090",
     "WAN22_IV2V_FACESWAP_5090": "WAN22_IV2V_FACESWAP_5090",
-    "ZIMAGE_TURBO_I2I_5090": "ZIMAGE_TURBO_I2I_5090",
-    "FLUX_S2_I2I_5090": "FLUX_S2_I2I_5090",
 }
 # Lanes that may appear on input.generation_lane (bot traffic). Declared load comes from non-empty
 # ``input.vast_workload_units`` when valid (matches bot SDK precedence), else template env
