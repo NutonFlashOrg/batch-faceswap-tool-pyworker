@@ -1,4 +1,6 @@
-__pycache__/
-*.pyc
-.venv/
-.DS_Store
+.direnv
+.envrc
+__pycache__
+bin/
+lib64
+.venv

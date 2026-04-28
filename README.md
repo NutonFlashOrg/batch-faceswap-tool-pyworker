@@ -1,7 +1,18 @@
 # batch-faceswap-tool-pyworker
 
-PyWorker fork for the Batch Faceswap Tool — drives the Tokyo Sage chained ComfyUI workflow on the WAN22_IV2V_FACESWAP_5090 Vast lane.
+PyWorker fork for the Batch Faceswap Tool. Drives the Tokyo Sage chained ComfyUI workflow on the WAN22_IV2V_FACESWAP_5090 Vast lane.
 
-**Status:** placeholder. Real fork lands in Plan 5 after the S3-key contract (`jobs/<job_id>/videos/<video_id>/{source.mp4,nano.png,output.mp4}`) is finalized in Plan 4.
+## S3 path contract
 
-Mirrors the per-project pyworker fork pattern from `improved-undresser/undresser-pyworker/`.
+| Direction | Pattern |
+|---|---|
+| Input source video | `jobs/<job_id>/videos/<video_id>/source.mp4` |
+| Input Nano Banana PNG | `jobs/<job_id>/videos/<video_id>/nano.png` |
+| Output (written by worker) | `jobs/<job_id>/videos/<video_id>/output.mp4` |
+| LogTail diagnostics | `diagnostics/<request_id>/log.txt` + `log.done` |
+
+The worker derives the output key from the input source key by replacing `/source.mp4` → `/output.mp4`. See `workers/comfyui-json/workflow_transform.py` (`_output_key_for`) and `comfy_backend.py` (`process_generation`).
+
+## Image build
+
+Pushed via the GitHub Action in `.github/workflows/build-image.yml`. Tags: `latest` for `main`, plus the commit SHA.

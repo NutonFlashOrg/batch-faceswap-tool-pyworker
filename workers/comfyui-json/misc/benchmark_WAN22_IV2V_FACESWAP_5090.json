@@ -1,0 +1,1245 @@
+{
+  "27": {
+    "inputs": {
+      "steps": 1,
+      "cfg": 1,
+      "shift": 5,
+      "seed": 1234,
+      "force_offload": true,
+      "scheduler": "dpm++/beta",
+      "riflex_freq_index": 0,
+      "denoise_strength": 1,
+      "batched_cfg": false,
+      "rope_function": "comfy",
+      "start_step": 0,
+      "end_step": -1,
+      "add_noise_to_samples": false,
+      "model": [
+        "306",
+        0
+      ],
+      "image_embeds": [
+        "274",
+        0
+      ],
+      "text_embeds": [
+        "65",
+        0
+      ]
+    },
+    "class_type": "WanVideoSampler",
+    "_meta": {
+      "title": "Sampler"
+    }
+  },
+  "28": {
+    "inputs": {
+      "enable_vae_tiling": false,
+      "tile_x": 272,
+      "tile_y": 272,
+      "tile_stride_x": 144,
+      "tile_stride_y": 128,
+      "normalization": "default",
+      "vae": [
+        "304",
+        0
+      ],
+      "samples": [
+        "27",
+        0
+      ]
+    },
+    "class_type": "WanVideoDecode",
+    "_meta": {
+      "title": "Video Decode"
+    }
+  },
+  "42": {
+    "inputs": {
+      "image": [
+        "330",
+        1
+      ]
+    },
+    "class_type": "GetImageSizeAndCount",
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "57": {
+    "inputs": {
+      "image": "image_ref_v2.jpg"
+    },
+    "class_type": "LoadImage",
+    "_meta": {
+      "title": "reference_image"
+    }
+  },
+  "62": {
+    "inputs": {
+      "width": [
+        "150",
+        0
+      ],
+      "height": [
+        "151",
+        0
+      ],
+      "num_frames": [
+        "63",
+        1
+      ],
+      "force_offload": false,
+      "frame_window_size": 81,
+      "colormatch": "disabled",
+      "pose_strength": 0.7,
+      "face_strength": 0.6,
+      "tiled_vae": false,
+      "vae": [
+        "304",
+        0
+      ],
+      "clip_embeds": [
+        "70",
+        0
+      ],
+      "ref_images": [
+        "64",
+        0
+      ],
+      "pose_images": [
+        "173",
+        0
+      ],
+      "face_images": [
+        "172",
+        1
+      ],
+      "bg_images": [
+        "309",
+        0
+      ],
+      "mask": [
+        "108",
+        0
+      ]
+    },
+    "class_type": "WanVideoAnimateEmbeds",
+    "_meta": {
+      "title": "Animate Embeds"
+    }
+  },
+  "63": {
+    "inputs": {
+      "video": "ref_video_15sec_v2.mp4",
+      "force_rate": [
+        "199",
+        0
+      ],
+      "custom_width": [
+        "150",
+        0
+      ],
+      "custom_height": [
+        "151",
+        0
+      ],
+      "frame_load_cap": 0,
+      "skip_first_frames": 0,
+      "select_every_nth": 1,
+      "format": "AnimateDiff"
+    },
+    "class_type": "VHS_LoadVideo",
+    "_meta": {
+      "title": "reference_video"
+    }
+  },
+  "64": {
+    "inputs": {
+      "width": [
+        "150",
+        0
+      ],
+      "height": [
+        "151",
+        0
+      ],
+      "upscale_method": "lanczos",
+      "keep_proportion": "crop",
+      "pad_color": "0, 0, 0",
+      "crop_position": "top",
+      "divisible_by": 16,
+      "device": "cpu",
+      "image": [
+        "57",
+        0
+      ]
+    },
+    "class_type": "ImageResizeKJv2",
+    "_meta": {
+      "title": "Image Resize"
+    }
+  },
+  "65": {
+    "inputs": {
+      "model_name": "umt5_xxl_fp16.safetensors",
+      "precision": "bf16",
+      "positive_prompt": "一位女子正在跳舞，采用静态定格拍摄。摄影机固定在三脚架上，完全静止，没有任何摄影机移动、平移、俯仰、变焦、推车或跟拍。相机必须保持固定。它不需切换画面。",
+      "negative_prompt": "looking away, 色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走",
+      "quantization": "disabled",
+      "use_disk_cache": false,
+      "device": "gpu"
+    },
+    "class_type": "WanVideoTextEncodeCached",
+    "_meta": {
+      "title": "WanVideo TextEncode Cached"
+    }
+  },
+  "70": {
+    "inputs": {
+      "strength_1": 1,
+      "strength_2": 1,
+      "crop": "center",
+      "combine_embeds": "average",
+      "force_offload": true,
+      "tiles": 0,
+      "ratio": 0.5,
+      "clip_vision": [
+        "296",
+        0
+      ],
+      "image_1": [
+        "64",
+        0
+      ]
+    },
+    "class_type": "WanVideoClipVisionEncode",
+    "_meta": {
+      "title": "CLIP Vision Encode"
+    }
+  },
+  "102": {
+    "inputs": {
+      "model": "sam2.1_hiera_base_plus.safetensors",
+      "segmentor": "video",
+      "device": "cuda",
+      "precision": "fp16"
+    },
+    "class_type": "DownloadAndLoadSAM2Model",
+    "_meta": {
+      "title": "SAM2 Loader"
+    }
+  },
+  "104": {
+    "inputs": {
+      "keep_model_loaded": false,
+      "individual_objects": false,
+      "sam2_model": [
+        "102",
+        0
+      ],
+      "image": [
+        "180",
+        0
+      ],
+      "coordinates_positive": [
+        "172",
+        2
+      ]
+    },
+    "class_type": "Sam2Segmentation",
+    "_meta": {
+      "title": "SAM2 Segmentation"
+    }
+  },
+  "108": {
+    "inputs": {
+      "block_size": 32,
+      "device": "gpu",
+      "masks": [
+        "182",
+        0
+      ]
+    },
+    "class_type": "BlockifyMask",
+    "_meta": {
+      "title": "Blockify Mask"
+    }
+  },
+  "150": {
+    "inputs": {
+      "value": 720
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "INT Constant"
+    }
+  },
+  "151": {
+    "inputs": {
+      "value": 1280
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "INT Constant"
+    }
+  },
+  "172": {
+    "inputs": {
+      "width": [
+        "180",
+        1
+      ],
+      "height": [
+        "180",
+        2
+      ],
+      "face_padding": 0,
+      "model": [
+        "178",
+        0
+      ],
+      "images": [
+        "180",
+        0
+      ]
+    },
+    "class_type": "PoseAndFaceDetection",
+    "_meta": {
+      "title": "Pose and Face Detection"
+    }
+  },
+  "173": {
+    "inputs": {
+      "width": [
+        "180",
+        1
+      ],
+      "height": [
+        "180",
+        2
+      ],
+      "retarget_padding": 16,
+      "body_stick_width": -1,
+      "hand_stick_width": -1,
+      "draw_head": true,
+      "pose_data": [
+        "172",
+        0
+      ]
+    },
+    "class_type": "DrawViTPose",
+    "_meta": {
+      "title": "Draw Pose"
+    }
+  },
+  "178": {
+    "inputs": {
+      "vitpose_model": "vitpose_h_wholebody_model.onnx",
+      "yolo_model": "yolov10m.onnx",
+      "onnx_device": "CUDAExecutionProvider"
+    },
+    "class_type": "OnnxDetectionModelLoader",
+    "_meta": {
+      "title": "Detection Model Loader"
+    }
+  },
+  "180": {
+    "inputs": {
+      "image": [
+        "63",
+        0
+      ]
+    },
+    "class_type": "GetImageSizeAndCount",
+    "_meta": {
+      "title": "Get Image Size"
+    }
+  },
+  "182": {
+    "inputs": {
+      "expand": 250,
+      "incremental_expandrate": 0,
+      "tapered_corners": true,
+      "flip_input": false,
+      "blur_radius": 20,
+      "lerp_alpha": 1,
+      "decay_factor": 1,
+      "fill_holes": false,
+      "mask": [
+        "104",
+        0
+      ]
+    },
+    "class_type": "GrowMaskWithBlur",
+    "_meta": {
+      "title": "Grow Mask with Blur"
+    }
+  },
+  "189": {
+    "inputs": {
+      "ckpt_name": "rife49.pth",
+      "clear_cache_after_n_frames": 5,
+      "multiplier": 2,
+      "fast_mode": false,
+      "ensemble": true,
+      "scale_factor": 1,
+      "dtype": "float32",
+      "torch_compile": false,
+      "batch_size": 1,
+      "frames": [
+        "374",
+        0
+      ]
+    },
+    "class_type": "RIFE VFI",
+    "_meta": {
+      "title": "RIFE VFI (recommend rife4.25+)"
+    }
+  },
+  "199": {
+    "inputs": {
+      "a": 24
+    },
+    "_meta": {
+      "title": "Int to Float"
+    },
+    "class_type": "CM_IntToFloat"
+  },
+  "207": {
+    "inputs": {
+      "a": [
+        "199",
+        0
+      ],
+      "b": 2,
+      "operation": "multiply"
+    },
+    "class_type": "easy mathFloat",
+    "_meta": {
+      "title": "Float Math"
+    }
+  },
+  "211": {
+    "inputs": {
+      "frame_rate": [
+        "207",
+        0
+      ],
+      "loop_count": 0,
+      "filename_prefix": "Animate/Interpolated/WanimateInterpolated",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 19,
+      "save_metadata": true,
+      "trim_to_audio": true,
+      "pingpong": false,
+      "save_output": true,
+      "images": [
+        "352",
+        0
+      ],
+      "audio": [
+        "63",
+        2
+      ]
+    },
+    "class_type": "VHS_VideoCombine",
+    "_meta": {
+      "title": "Video Combine"
+    }
+  },
+  "215": {
+    "inputs": {
+      "anything": [
+        "42",
+        0
+      ]
+    },
+    "class_type": "easy cleanGpuUsed",
+    "_meta": {
+      "title": "Clean VRAM Used"
+    }
+  },
+  "274": {
+    "inputs": {
+      "width": [
+        "150",
+        0
+      ],
+      "height": [
+        "151",
+        0
+      ],
+      "num_frames": [
+        "400",
+        0
+      ],
+      "force_offload": false,
+      "frame_window_size": 77,
+      "colormatch": "disabled",
+      "pose_strength": 0.7,
+      "face_strength": 0.6,
+      "tiled_vae": false,
+      "vae": [
+        "304",
+        0
+      ],
+      "clip_embeds": [
+        "70",
+        0
+      ],
+      "ref_images": [
+        "64",
+        0
+      ],
+      "pose_images": [
+        "334",
+        0
+      ],
+      "face_images": [
+        "335",
+        0
+      ],
+      "bg_images": [
+        "336",
+        0
+      ],
+      "mask": [
+        "337",
+        1
+      ],
+      "start_ref_image": [
+        "329",
+        2
+      ]
+    },
+    "class_type": "WanVideoAnimateEmbeds",
+    "_meta": {
+      "title": "Animate Embeds"
+    }
+  },
+  "294": {
+    "inputs": {
+      "backend": "inductor",
+      "fullgraph": false,
+      "mode": "default",
+      "dynamic": false,
+      "dynamo_cache_size_limit": 64,
+      "compile_transformer_blocks_only": true,
+      "dynamo_recompile_limit": 128,
+      "force_parameter_static_shapes": false,
+      "allow_unmerged_lora_compile": false
+    },
+    "class_type": "WanVideoTorchCompileSettings",
+    "_meta": {
+      "title": "WanVideo Torch Compile Settings"
+    }
+  },
+  "295": {
+    "inputs": {
+      "lora": "wan2.2_animate_14B_relight_lora_bf16.safetensors",
+      "strength": 1,
+      "low_mem_load": false,
+      "merge_loras": false
+    },
+    "class_type": "WanVideoLoraSelect",
+    "_meta": {
+      "title": "LoRA Select"
+    }
+  },
+  "296": {
+    "inputs": {
+      "clip_name": "clip_vision_h.safetensors"
+    },
+    "class_type": "CLIPVisionLoader",
+    "_meta": {
+      "title": "CLIP Vision Loader"
+    }
+  },
+  "298": {
+    "inputs": {
+      "model": "wan2.2_animate_14B_bf16.safetensors",
+      "base_precision": "bf16",
+      "quantization": "fp8_e4m3fn",
+      "load_device": "offload_device",
+      "attention_mode": "sageattn",
+      "rms_norm_function": "default",
+      "compile_args": [
+        "294",
+        0
+      ]
+    },
+    "class_type": "WanVideoModelLoader",
+    "_meta": {
+      "title": "Model Loader"
+    }
+  },
+  "299": {
+    "inputs": {
+      "lora": "lightx2v_T2V_14B_cfg_step_distill_v2_lora_rank128_bf16.safetensors",
+      "strength": 1,
+      "low_mem_load": false,
+      "merge_loras": false,
+      "prev_lora": [
+        "295",
+        0
+      ]
+    },
+    "class_type": "WanVideoLoraSelect",
+    "_meta": {
+      "title": "LoRA Select"
+    }
+  },
+  "301": {
+    "inputs": {
+      "lora_0": "none",
+      "strength_0": 1,
+      "lora_1": "wan2.2_i2v_lightx2v_4steps_lora_v1_low_noise.safetensors",
+      "strength_1": 0.3,
+      "lora_2": "Wan21_PusaV1_LoRA_14B_rank512_bf16.safetensors",
+      "strength_2": 0.9,
+      "lora_3": "Wan2.2-Fun-A14B-InP-low-noise-MPS.safetensors",
+      "strength_3": 0.5,
+      "lora_4": "none",
+      "strength_4": 1,
+      "low_mem_load": false,
+      "merge_loras": false,
+      "prev_lora": [
+        "299",
+        0
+      ]
+    },
+    "class_type": "WanVideoLoraSelectMulti",
+    "_meta": {
+      "title": "Multi LoRA Select"
+    }
+  },
+  "302": {
+    "inputs": {
+      "model": [
+        "298",
+        0
+      ],
+      "lora": [
+        "301",
+        0
+      ]
+    },
+    "class_type": "WanVideoSetLoRAs",
+    "_meta": {
+      "title": "Set LoRAs"
+    }
+  },
+  "304": {
+    "inputs": {
+      "model_name": "Wan2_1_VAE_bf16.safetensors",
+      "precision": "bf16",
+      "use_cpu_cache": false,
+      "verbose": false
+    },
+    "class_type": "WanVideoVAELoader",
+    "_meta": {
+      "title": "VAE Loader"
+    }
+  },
+  "305": {
+    "inputs": {
+      "blocks_to_swap": 0,
+      "offload_img_emb": false,
+      "offload_txt_emb": false,
+      "use_non_blocking": false,
+      "vace_blocks_to_swap": 0,
+      "prefetch_blocks": 0,
+      "block_swap_debug": false
+    },
+    "class_type": "WanVideoBlockSwap",
+    "_meta": {
+      "title": "Block Swap"
+    }
+  },
+  "306": {
+    "inputs": {
+      "model": [
+        "302",
+        0
+      ],
+      "block_swap_args": [
+        "305",
+        0
+      ]
+    },
+    "class_type": "WanVideoSetBlockSwap",
+    "_meta": {
+      "title": "WanVideo Set BlockSwap"
+    }
+  },
+  "309": {
+    "inputs": {
+      "color": "0, 0, 0",
+      "device": "gpu",
+      "image": [
+        "63",
+        0
+      ],
+      "mask": [
+        "108",
+        0
+      ]
+    },
+    "class_type": "DrawMaskOnImage",
+    "_meta": {
+      "title": "Draw Mask on Image"
+    }
+  },
+  "329": {
+    "inputs": {
+      "total": [
+        "333",
+        0
+      ]
+    },
+    "class_type": "easy forLoopStart",
+    "_meta": {
+      "title": "Loop Start"
+    }
+  },
+  "330": {
+    "inputs": {
+      "flow": [
+        "329",
+        0
+      ],
+      "initial_value1": [
+        "338",
+        0
+      ],
+      "initial_value2": [
+        "353",
+        0
+      ]
+    },
+    "class_type": "easy forLoopEnd",
+    "_meta": {
+      "title": "Loop End"
+    }
+  },
+  "331": {
+    "inputs": {
+      "a": [
+        "329",
+        1
+      ],
+      "b": 77,
+      "operation": "multiply"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "start_idx = index * 77"
+    }
+  },
+  "332": {
+    "inputs": {
+      "a": [
+        "63",
+        1
+      ],
+      "b": 76,
+      "operation": "add"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "ceil step 1: +76"
+    }
+  },
+  "333": {
+    "inputs": {
+      "a": [
+        "332",
+        0
+      ],
+      "b": 77,
+      "operation": "divide"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "ceil step 2: //77"
+    }
+  },
+  "334": {
+    "inputs": {
+      "start_index": [
+        "346",
+        0
+      ],
+      "num_frames": [
+        "400",
+        0
+      ],
+      "images": [
+        "173",
+        0
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Slice pose"
+    }
+  },
+  "335": {
+    "inputs": {
+      "start_index": [
+        "346",
+        0
+      ],
+      "num_frames": [
+        "400",
+        0
+      ],
+      "images": [
+        "172",
+        1
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Slice face"
+    }
+  },
+  "336": {
+    "inputs": {
+      "start_index": [
+        "346",
+        0
+      ],
+      "num_frames": [
+        "400",
+        0
+      ],
+      "images": [
+        "309",
+        0
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Slice background"
+    }
+  },
+  "337": {
+    "inputs": {
+      "start_index": [
+        "346",
+        0
+      ],
+      "num_frames": [
+        "400",
+        0
+      ],
+      "masks": [
+        "108",
+        0
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Slice mask"
+    }
+  },
+  "338": {
+    "inputs": {
+      "start_index": -1,
+      "num_frames": 1,
+      "images": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Last frame of chunk"
+    }
+  },
+  "339": {
+    "inputs": {
+      "a": [
+        "333",
+        0
+      ],
+      "b": 1,
+      "operation": "subtract"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "last_index = total - 1"
+    }
+  },
+  "340": {
+    "inputs": {
+      "a": [
+        "63",
+        1
+      ],
+      "b": 77,
+      "operation": "subtract"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "last_start = frame_count - 77"
+    }
+  },
+  "341": {
+    "inputs": {
+      "a": [
+        "333",
+        0
+      ],
+      "b": 77,
+      "operation": "multiply"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "expected = total * 77"
+    }
+  },
+  "342": {
+    "inputs": {
+      "a": [
+        "341",
+        0
+      ],
+      "b": [
+        "63",
+        1
+      ],
+      "operation": "subtract"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "overlap_raw = expected - frame_count"
+    }
+  },
+  "343": {
+    "inputs": {
+      "a": [
+        "342",
+        0
+      ],
+      "b": 1,
+      "operation": "subtract"
+    },
+    "class_type": "easy mathInt",
+    "_meta": {
+      "title": "overlap = raw - 1  [anchor-strip correction]"
+    }
+  },
+  "344": {
+    "inputs": {
+      "comparison": "a > 0",
+      "a": [
+        "343",
+        0
+      ]
+    },
+    "class_type": "easy compare",
+    "_meta": {
+      "title": "overlap > 0"
+    }
+  },
+  "345": {
+    "inputs": {
+      "comparison": "a == b",
+      "a": [
+        "329",
+        1
+      ],
+      "b": [
+        "339",
+        0
+      ]
+    },
+    "class_type": "easy compare",
+    "_meta": {
+      "title": "is_last = index == last_index"
+    }
+  },
+  "346": {
+    "inputs": {
+      "boolean": [
+        "345",
+        0
+      ],
+      "on_true": [
+        "399",
+        0
+      ],
+      "on_false": [
+        "331",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "start_idx = is_last ? last_start : index*77"
+    }
+  },
+  "347": {
+    "inputs": {
+      "boolean": [
+        "345",
+        0
+      ],
+      "on_true": [
+        "348",
+        0
+      ],
+      "on_false": [
+        "349",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "drop_count = is_last ? overlap : 0"
+    }
+  },
+  "348": {
+    "inputs": {
+      "boolean": [
+        "344",
+        0
+      ],
+      "on_true": [
+        "343",
+        0
+      ],
+      "on_false": [
+        "349",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "clamped_overlap = max(0, adjusted)"
+    }
+  },
+  "349": {
+    "inputs": {
+      "value": 0
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "INT Constant"
+    }
+  },
+  "350": {
+    "inputs": {
+      "start_index": [
+        "401",
+        0
+      ],
+      "num_frames": [
+        "400",
+        0
+      ],
+      "images": [
+        "28",
+        0
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Slice decoded chunk (drop overlap)"
+    }
+  },
+  "351": {
+    "inputs": {
+      "model_name": "1xSkinContrast-High-SuperUltraCompact.pth"
+    },
+    "class_type": "UpscaleModelLoader",
+    "_meta": {
+      "title": "Skin Upscale Model"
+    }
+  },
+  "352": {
+    "inputs": {
+      "upscale_model": [
+        "351",
+        0
+      ],
+      "image": [
+        "189",
+        0
+      ]
+    },
+    "class_type": "ImageUpscaleWithModel",
+    "_meta": {
+      "title": "Skin Upscale (1x)"
+    }
+  },
+  "353": {
+    "inputs": {
+      "any_1": [
+        "329",
+        3
+      ],
+      "any_2": [
+        "350",
+        0
+      ]
+    },
+    "class_type": "easy batchAnything",
+    "_meta": {
+      "title": "Accumulate chunks"
+    }
+  },
+  "373": {
+    "inputs": {
+      "start_index": 0,
+      "num_frames": 1,
+      "images": [
+        "215",
+        0
+      ]
+    },
+    "class_type": "GetImageRangeFromBatch",
+    "_meta": {
+      "title": "Global ref (frame 0)"
+    }
+  },
+  "374": {
+    "inputs": {
+      "method": "mvgd",
+      "strength": 1,
+      "multithread": true,
+      "image_ref": [
+        "373",
+        0
+      ],
+      "image_target": [
+        "215",
+        0
+      ]
+    },
+    "class_type": "ColorMatch",
+    "_meta": {
+      "title": "Global ColorMatch (post-loop)"
+    }
+  },
+  "395": {
+    "inputs": {
+      "offload_model": false,
+      "offload_cache": true,
+      "anything": [
+        "352",
+        0
+      ]
+    },
+    "class_type": "VRAMCleanup",
+    "_meta": {
+      "title": "VRAM Cleanup (terminal — full unload)"
+    }
+  },
+  "396": {
+    "inputs": {
+      "clean_file_cache": true,
+      "clean_processes": true,
+      "clean_dlls": false,
+      "retry_times": 3,
+      "anything": [
+        "395",
+        0
+      ]
+    },
+    "class_type": "RAMCleanup",
+    "_meta": {
+      "title": "RAM Cleanup (terminal — malloc_trim)"
+    }
+  },
+  "397": {
+    "inputs": {
+      "value": 77
+    },
+    "class_type": "INTConstant",
+    "_meta": {
+      "title": "CHUNK_SIZE_MAX (77)"
+    }
+  },
+  "398": {
+    "inputs": {
+      "comparison": "a < b",
+      "a": [
+        "63",
+        1
+      ],
+      "b": [
+        "397",
+        0
+      ]
+    },
+    "class_type": "easy compare",
+    "_meta": {
+      "title": "is_short_video (frame_count < 77)"
+    }
+  },
+  "399": {
+    "inputs": {
+      "boolean": [
+        "398",
+        0
+      ],
+      "on_true": [
+        "349",
+        0
+      ],
+      "on_false": [
+        "340",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "last_start_safe = is_short ? 0 : last_start"
+    }
+  },
+  "400": {
+    "inputs": {
+      "boolean": [
+        "398",
+        0
+      ],
+      "on_true": [
+        "63",
+        1
+      ],
+      "on_false": [
+        "397",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "chunk_size = is_short ? frame_count : 77"
+    }
+  },
+  "401": {
+    "inputs": {
+      "boolean": [
+        "398",
+        0
+      ],
+      "on_true": [
+        "349",
+        0
+      ],
+      "on_false": [
+        "347",
+        0
+      ]
+    },
+    "class_type": "easy ifElse",
+    "_meta": {
+      "title": "drop_count_safe = is_short ? 0 : drop_count"
+    }
+  }
+}
