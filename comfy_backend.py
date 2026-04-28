@@ -1077,6 +1077,9 @@ def process_generation(payload: Dict[str, Any], worker_state=None) -> Dict[str, 
     generation_id = str(job_input.get("generation_id") or "")
     job_id = str(payload.get("id") or "")
     s3_bucket = str(job_input.get("s3_bucket") or "").strip()
+    # If set by workflow_transform, use the pre-derived key so the output lands at
+    # jobs/<job_id>/videos/<video_id>/output.mp4 (batch-faceswap-tool S3 contract).
+    output_s3_key: str | None = (job_input.get("output_s3_key") or "").strip() or None
 
     if not isinstance(workflow_json, dict):
         return {
@@ -1158,7 +1161,7 @@ def process_generation(payload: Dict[str, Any], worker_state=None) -> Dict[str, 
 
             ext = pathlib.Path(v["filename"]).suffix or ".mp4"
             s3_filename = f"result{ext}"
-            key = s3.build_key(
+            key = output_s3_key or s3.build_key(
                 user_id=user_id, generation_id=generation_id, filename=s3_filename
             )
 

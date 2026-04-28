@@ -573,10 +573,34 @@ def transform_app_to_vast(payload: dict) -> dict:
         )
         if s3_bucket:
             out_input["s3_bucket"] = s3_bucket
+        # Derive and pass the output S3 key from the reference_video input so
+        # comfy_backend.py can write the result to the correct contract path
+        # (jobs/<job_id>/videos/<video_id>/output.mp4).
+        ref_video = next(
+            (e for e in input_images if isinstance(e, dict) and e.get("title") == "reference_video"),
+            None,
+        )
+        if ref_video is not None and ref_video.get("key"):
+            out_input["output_s3_key"] = _output_key_for(ref_video["key"])
         return _merge_passthrough({"input": out_input}, payload)
     finally:
         if scratch_dir is not None:
             _cleanup_worker_s3_scratch(scratch_dir)
+
+
+def _output_key_for(reference_video_input_key: str) -> str:
+    """Derive output key from input source-video key.
+
+    Contract (Plan 4 Track A1):
+        jobs/<job_id>/videos/<video_id>/source.mp4
+        → jobs/<job_id>/videos/<video_id>/output.mp4
+    """
+    if not reference_video_input_key.endswith("/source.mp4"):
+        raise ValueError(
+            f"unexpected input key shape: {reference_video_input_key!r}; "
+            "expected '.../source.mp4'"
+        )
+    return reference_video_input_key.removesuffix("/source.mp4") + "/output.mp4"
 
 
 def _cleanup_worker_s3_scratch(scratch_dir: Path) -> None:
